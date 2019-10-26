@@ -1,4 +1,6 @@
 import { isComponentType } from './index.js';
+import juice from 'juice';
+
 
 export default (editor, { dc, coreMjmlModel, coreMjmlView }) => {
   const type = 'mj-carousel';
@@ -31,9 +33,9 @@ export default (editor, { dc, coreMjmlModel, coreMjmlView }) => {
     view: {
       ...coreMjmlView,
 
-      tagName: 'div',
+      tagName: 'tr',
       attributes: {
-        style: 'pointer-events: all;',
+        style: 'font-size:0px;word-break:break-word;pointer-events: all;',
       },
 
       render(p, c, opts, appendChildren) {
@@ -41,37 +43,22 @@ export default (editor, { dc, coreMjmlModel, coreMjmlView }) => {
         const sandbox = document.createElement('div');
         let mjmlResult = this.getTemplateFromMjmlWithStyle();
         sandbox.innerHTML = mjmlResult.content;
-        const carouselEl = sandbox.querySelector('.mj-carousel');
+        const carouselEl = sandbox.querySelector('td');
+
+        // make all links unclickable
         carouselEl.querySelectorAll('a').forEach((link) => {
-          // make all links unclickable
           link.removeAttribute('href');
-          // fixes a weird bug with the preview thumbnails not matching how it's actually rendered
-          // let width = link.style.width;
-          // if (width && width.includes('%')) {
-          //   let newWidth = '';
-          //   let widthNum = parseInt(width);
-          //   let widthUnit = '%';
-          //   newWidth = `${widthNum + 1}${widthUnit}`;
-          //   link.style.width = newWidth;
-          // }
         });
 
-        // tries to fix a WEIRD WEIRD bug with preview thumbnail not rendering correctly on the editor
-        // carouselEl.querySelector('.mj-carousel-content').style.width = '99%';
+        console.log("A B C D");
 
-        this.el.innerHTML = carouselEl.outerHTML;
-        editor.addComponents(`<style>${mjmlResult.style}</style>`);
-        // debugger;
+        this.el.innerHTML = juice(`<style>${mjmlResult.style}</style>${carouselEl.outerHTML}`);
         this.renderStyle();
         return this;
       },
 
       getTemplateFromEl(sandboxEl) {
-        return sandboxEl.firstChild.querySelector('.mj-carousel').parentElement;
-      },
-
-      getChildrenSelector() {
-        return '.mj-carousel-images';
+        return sandboxEl.firstChild.querySelector('.mj-column-per-100');
       },
 
       renderStyle() {
