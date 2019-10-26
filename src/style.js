@@ -113,6 +113,12 @@ export default (editor, opt = {}) => {
             },
             { name: 'Color', property: 'border-color', type: 'color' },
           ],
+        }, {
+          property: 'left-icon',
+          type: 'file',
+        }, {
+          property: 'right-icon',
+          type: 'file',
         }],
       }
       ]);

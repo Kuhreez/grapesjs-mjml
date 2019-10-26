@@ -14,7 +14,7 @@ export default (editor, { dc, coreMjmlModel, coreMjmlView }) => {
         draggable: '[data-gjs-type=mj-column]',
         stylable: [
           'border-radius', 'border-top-left-radius', 'border-top-right-radius', 'border-bottom-left-radius', 'border-bottom-right-radius',
-          // 'left-icon', 'right-icon'
+          'left-icon', 'right-icon'
         ],
         traits: [{ // make it so that you have to enter text for how many images you want
           label: 'Thumbnail',
@@ -24,8 +24,38 @@ export default (editor, { dc, coreMjmlModel, coreMjmlView }) => {
             { value: 'hidden', name: 'Hidden' },
           ],
           type: 'select',
+        }, {
+          label: 'Image Count',
+          name: 'image-count',
+          options: [
+            { value: '1', name: '1' },
+            { value: '2', name: '2' },
+            { value: '3', name: '3' },
+            { value: '4', name: '4' },
+            { value: '5', name: '5' },
+            { value: '6', name: '6' },
+          ],
+          changeProp: 1,
+          type: 'select',
         }],
       },
+
+      init() {
+        coreMjmlView.init.call(this);
+        this.listenTo(this, 'change:image-count', this.imageCountChanged);
+      },
+
+      getChildrenMjml() {
+        let code = '';
+        this.get('components').each((model) => {
+          code += model.toHTML();
+        });
+        return code;
+      },
+
+      imageCountChanged() {
+        console.log("goth ere");
+      }
     },
 
     view: {
@@ -68,12 +98,7 @@ export default (editor, { dc, coreMjmlModel, coreMjmlView }) => {
 
       getInnerMjmlTemplate() {
         let innerMjmlTemplate = coreMjmlView.getInnerMjmlTemplate.call(this);
-        // TODO replace this with dynamic mjml images
-        innerMjmlTemplate.start = `${innerMjmlTemplate.start}
-          <mj-carousel-image src="https://www.mailjet.com/wp-content/uploads/2016/11/ecommerce-guide.jpg"></mj-carousel-image>
-          <mj-carousel-image src="https://www.mailjet.com/wp-content/uploads/2016/09/3@1x.png"></mj-carousel-image>
-          <mj-carousel-image src="https://www.mailjet.com/wp-content/uploads/2016/09/1@1x.png"></mj-carousel-image>`;
-        // innerMjmlTemplate.start = `${innerMjmlTemplate.start}${this.model.getCarouselImagesMjml()}`;
+        innerMjmlTemplate.start = `${innerMjmlTemplate.start}${this.model.getChildrenMjml()}`;
         return innerMjmlTemplate;
       },
 
