@@ -14,9 +14,7 @@ export default (editor, { dc, coreMjmlModel, coreMjmlView }) => {
         draggable: '[data-gjs-type=mj-column]',
         stylable: [
           'border-radius', 'border-top-left-radius', 'border-top-right-radius', 'border-bottom-left-radius', 'border-bottom-right-radius',
-          'tb-border-radius', 'tb-border-top-left-radius', 'tb-border-top-right-radius', 'tb-border-bottom-left-radius', 'tb-border-bottom-right-radius',
-          'tb-border', 'tb-border-style', 'tb-border-color', 'tb-border-width', 'tb-hover-border-color', 'tb-selected-border-color',
-          'tb-width', 'icon-width',
+          // 'left-icon', 'right-icon'
         ],
         traits: [{ // make it so that you have to enter text for how many images you want
           label: 'Thumbnail',
@@ -50,7 +48,10 @@ export default (editor, { dc, coreMjmlModel, coreMjmlView }) => {
           link.removeAttribute('href');
         });
 
-        console.log("A B C D");
+        // disable all pointer events inside carousel
+        carouselEl.querySelectorAll('*').forEach((el) => {
+          el.style.pointerEvents = 'none';
+        });
 
         this.el.innerHTML = juice(`<style>${mjmlResult.style}</style>${carouselEl.outerHTML}`);
         this.renderStyle();
