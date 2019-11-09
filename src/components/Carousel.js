@@ -11,6 +11,7 @@ export default (editor, { dc, coreMjmlModel, coreMjmlView }) => {
     model: {
       ...coreMjmlModel,
       defaults: {
+        name: 'Carousel',
         draggable: '[data-gjs-type=mj-column]',
         stylable: [
           'border-radius', 'border-top-left-radius', 'border-top-right-radius', 'border-bottom-left-radius', 'border-bottom-right-radius',
@@ -42,6 +43,8 @@ export default (editor, { dc, coreMjmlModel, coreMjmlView }) => {
 
       init() {
         coreMjmlView.init.call(this);
+        const imageCountTrait = this.getTrait('image-count');
+        imageCountTrait.setTargetValue(this.components().models.length);
         this.listenTo(this, 'change:image-count', this.imageCountChanged);
       },
 
@@ -53,9 +56,23 @@ export default (editor, { dc, coreMjmlModel, coreMjmlView }) => {
         return code;
       },
 
-      imageCountChanged() {
-        console.log("goth ere");
-      }
+      imageCountChanged(model, imageCount) {
+        const currentImageCount = model.components().models.length;
+        if (currentImageCount > imageCount) {
+          let imageDeleteCount = currentImageCount - imageCount;
+          while (imageDeleteCount > 0) {
+            model.components().pop();
+            imageDeleteCount--;
+          }
+        } else if (currentImageCount < imageCount) {
+          let imageAddCount = imageCount - currentImageCount;
+          while (imageAddCount > 0) {
+            model.append(`<mj-carousel-image src="http://placehold.it/350x250/78c5d6/fff"></mj-carousel-image>`);
+            imageAddCount--;
+          }
+        }
+        model.view.render();
+      },
     },
 
     view: {
