@@ -31,6 +31,11 @@ export default (editor, opt = {}) => {
           type: 'integer',
           defaults: '20px',
           units: ['px', '%']
+        }, {
+          property: 'icon-width',
+          type: 'integer',
+          defaults: '44px',
+          units: ['px']
         }],
       }, {
         name: 'Typography',

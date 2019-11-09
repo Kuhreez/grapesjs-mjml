@@ -14,6 +14,7 @@ export default (editor, { dc, coreMjmlModel, coreMjmlView }) => {
         name: 'Carousel',
         draggable: '[data-gjs-type=mj-column]',
         stylable: [
+          'align', 'background-color', 'icon-width',
           'border-radius', 'border-top-left-radius', 'border-top-right-radius', 'border-bottom-left-radius', 'border-bottom-right-radius',
           'left-icon', 'right-icon'
         ],
